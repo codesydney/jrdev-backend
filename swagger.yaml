@@ -1,0 +1,211 @@
+openapi: 3.0.0tasks
+info:
+  title: JRDEV APIs
+  description: '**JRDEV APIs**'
+  contact: {}
+  version: '1.0'
+servers:
+  - url: http://localhost:5000/api/v1
+    variables: {}
+paths:
+  /users/signUp:
+    post:
+      tags:
+        - Auth
+      summary: Register User
+      description: Use this endpoint to register a user
+      operationId: RegisterUser
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+            example:
+              name: Praveen
+              email: engramar@code.sydney
+              password: '12345678'
+              passwordConfirm: '12345678'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /users/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Use this endpoint to log in
+      operationId: login
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginrequest'
+            example:
+              email: engramar@code.sydney
+              password: '12345678'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /providers:
+    post:
+      tags:
+        - Providers
+      summary: Create Provider
+      operationId: CreateProvider
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /customers:
+    post:
+      tags:
+        - Customers
+      summary: Create Customer
+      operationId: CreateCustomer
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerrequest'
+            example:
+              name: 'Tom Jones'
+              email: 'TJones@gmail.com'
+              phone: '450409133'
+              description: 'My migram customer profile'
+              shipping:
+                name: 'TJ'
+                address:
+                  line1: '5/27 Denman Parade'
+                  line2: 'Normanhurst'
+                  city: 'Sydney'
+                  state: 'NSW'
+                  country: 'AU'
+                  postal_code: 2076
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /customers/create-setup-intent:
+    post:
+      tags:
+        - Customers
+      summary: Create Setup Intent
+      operationId: CreateSetupIntent
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The user ID
+    get:
+      tags:
+        - Auth
+      summary: Get User
+      operationId: GetUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    RegisterUserRequest:
+      title: RegisterUserRequest
+      required:
+        - name
+        - email
+        - password
+        - passwordConfirm
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+      example:
+        name: Praveen
+        email: engramar@code.sydney
+        password: '12345678'
+        passwordConfirm: '12345678'
+    CreateCustomerrequest:
+      title: CreateCustomerrequest
+      required:
+        - name
+        - email
+        - phone
+        - description
+        - shipping
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        description:
+          type: string
+        shipping:
+          type: object
+          properties:
+            line1:
+              type: string
+            line2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+            postal_code:
+              type: string
+    loginrequest:
+      title: loginrequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: engramar@code.sydney
+        password: '12345678'
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+  - httpBearer: []
