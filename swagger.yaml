@@ -56,36 +56,36 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /providers:
+  /recruiters:
     post:
       tags:
-        - Providers
-      summary: Create Provider
-      operationId: CreateProvider
+        - Recruiters
+      summary: Create Recruiter
+      operationId: CreateRecruiter
       parameters: []
       responses:
         '200':
           description: ''
           headers: {}
       deprecated: false
-  /customers:
+  /candidates:
     post:
       tags:
-        - Customers
-      summary: Create Customer
-      operationId: CreateCustomer
+        - Candidates
+      summary: Create Candidate
+      operationId: CreateCandidate
       parameters: []
       requestBody:
         description: ''
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCustomerrequest'
+              $ref: '#/components/schemas/CreateCandidaterequest'
             example:
               name: 'Tom Jones'
               email: 'TJones@gmail.com'
               phone: '450409133'
-              description: 'My migram customer profile'
+              description: 'My migram candidate profile'
               shipping:
                 name: 'TJ'
                 address:
@@ -101,10 +101,10 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /customers/create-setup-intent:
+  /candidates/create-setup-intent:
     post:
       tags:
-        - Customers
+        - Candidates
       summary: Create Setup Intent
       operationId: CreateSetupIntent
       parameters: []
@@ -156,8 +156,8 @@ components:
         email: engramar@code.sydney
         password: '12345678'
         passwordConfirm: '12345678'
-    CreateCustomerrequest:
-      title: CreateCustomerrequest
+    CreateCandidaterequest:
+      title: CreateCandidaterequest
       required:
         - name
         - email
