@@ -22,7 +22,7 @@ paths:
             schema:
               $ref: '#/components/schemas/RegisterUserRequest'
             example:
-              name: Praveen
+              name: Engramar
               email: engramar@code.sydney
               password: '12345678'
               passwordConfirm: '12345678'
@@ -140,7 +140,7 @@ components:
         passwordConfirm:
           type: string
       example:
-        name: Praveen
+        name: Engramar
         email: engramar@code.sydney
         password: '12345678'
         passwordConfirm: '12345678'
