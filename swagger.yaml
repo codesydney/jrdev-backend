@@ -101,18 +101,6 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /candidates/create-setup-intent:
-    post:
-      tags:
-        - Candidates
-      summary: Create Setup Intent
-      operationId: CreateSetupIntent
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
   /users/{id}:
     parameters:
       - in: path
