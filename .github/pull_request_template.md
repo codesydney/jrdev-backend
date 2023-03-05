@@ -14,4 +14,4 @@ What does this pull request do?
 ## Issue Resolved
 
 *Note - This allows the issue to be automatically linked to the PR once the PR is submitted for review*
-- Fixes #<Issue Number>![image](https://user-images.githubusercontent.com/7553347/222953082-192b75ff-30ee-4f58-aa05-196b683ccc93.png)
+- Fixes #<Issue Number>
