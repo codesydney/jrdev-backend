@@ -3,6 +3,7 @@ const path = require('path');
 const cloudinary = require('../utils/cloundinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+// Set up multer middleware to handle FormData
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
