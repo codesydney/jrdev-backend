@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      required: false,
+    },
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
     },
   },
   {

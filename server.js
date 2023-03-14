@@ -1,5 +1,5 @@
 const userRoutes = require('./routes/userRoutes');
-
+const ProfileRouter = require('./routes/profileRoutes');
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -22,10 +22,8 @@ app.use(express.json());
 
 app.use(cors());
 
-// uploadFile middleware
-// app.use(uploadFile);
-
 app.use('/api/user', userRoutes);
+app.use('/api/candidate', ProfileRouter);
 
 //* connect to the DB
 mongoose
