@@ -9,6 +9,7 @@ const {
 } = require('../controllers/profileController');
 
 ProfileRouter.get('/profile', getAllProfiles);
+
 ProfileRouter.post(
   '/profile',
   requireAuth,

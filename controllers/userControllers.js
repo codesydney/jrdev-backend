@@ -1,5 +1,4 @@
 const User = require('../models/userModel');
-const uploadFile = require('../middleware/uploadFile');
 const cloudinary = require('../utils/cloundinary');
 const jwt = require('jsonwebtoken');
 

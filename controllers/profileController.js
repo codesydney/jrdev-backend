@@ -1,8 +1,7 @@
 const Profile = require('../models/profileModel');
-const uploadFile = require('../middleware/uploadFile');
 const cloudinary = require('../utils/cloundinary');
 
-//Get All candidate's profile
+// Get All candidate's profile
 const getAllProfiles = async (req, res) => {
   try {
     const profiles = await Profile.find({}).populate('user', {
@@ -20,10 +19,10 @@ const getAllProfiles = async (req, res) => {
   }
 };
 
-//Create candidate's profile
+// Create candidate's profile
 const createProfile = async (req, res) => {
   const user = req.user;
-  if (user.profile) {
+  if (!user.profile) {
     const {
       about,
       skills,
@@ -33,10 +32,10 @@ const createProfile = async (req, res) => {
       githubLink,
       linkedinLink,
     } = req.body;
-    let resume = '';
+    let resumeUrl = '';
     try {
       if (req.file) {
-        //upload resume to Cloudinary
+        //upload resume in PDF format to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path);
         resumeUrl = result.secure_url;
       }
@@ -51,6 +50,7 @@ const createProfile = async (req, res) => {
         githubLink,
         linkedinLink,
       });
+      // Save profile to the specific user
       user.profile = newPortfolio._id;
       await user.save();
       res.status(201).json({ newPortfolio, status: 'success' });
