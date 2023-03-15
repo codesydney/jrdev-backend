@@ -7,9 +7,11 @@ const {
   getAllProfiles,
   getProfilesById,
   createProfile,
+  updateProfile,
 } = require('../controllers/profileController');
 
 ProfileRouter.get('/profile', requireAuth, getAllProfiles);
+
 ProfileRouter.get('/profile/:id', requireAuth, getProfilesById);
 
 ProfileRouter.post(
@@ -17,6 +19,13 @@ ProfileRouter.post(
   requireAuth,
   uploadResume.single('resume'),
   createProfile
+);
+
+ProfileRouter.put(
+  '/profile/:id',
+  requireAuth,
+  uploadResume.single('resume'),
+  updateProfile
 );
 
 module.exports = ProfileRouter;

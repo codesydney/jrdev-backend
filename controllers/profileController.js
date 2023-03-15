@@ -76,4 +76,58 @@ const createProfile = async (req, res) => {
   }
 };
 
-module.exports = { getAllProfiles, getProfilesById, createProfile };
+//Update candidate's profile By Id
+const updateProfile = async (req, res) => {
+  const user = req.user;
+  if (user.profile) {
+    try {
+      const {
+        about,
+        skills,
+        education,
+        codeSyneyBadge,
+        portfolioLink,
+        githubLink,
+        linkedinLink,
+      } = req.body;
+
+      const updateFields = {
+        about,
+        skills,
+        education,
+        codeSyneyBadge,
+        portfolioLink,
+        githubLink,
+        linkedinLink,
+      };
+
+      // If there is a new resume file, upload it to Cloudinary and add the resumeUrl to the update fields
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const resumeUrl = result.secure_url;
+        updateFields.resume = resumeUrl;
+      }
+      const updatedProfile = await Profile.findByIdAndUpdate(
+        user.profile,
+        updateFields,
+        { new: true }
+      );
+      if (!updatedProfile) {
+        return res.status(404).json({ error: 'Profile not found' });
+      }
+
+      res.status(200).json({ updatedProfile, status: 'success' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    return res.status(400).json({ error: 'Profile does not exist' });
+  }
+};
+
+module.exports = {
+  getAllProfiles,
+  getProfilesById,
+  createProfile,
+  updateProfile,
+};
