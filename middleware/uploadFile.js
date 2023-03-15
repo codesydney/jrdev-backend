@@ -13,6 +13,18 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const uploadFile = multer({ storage: storage, limits: { fileSize: 1000000 } });
+const ResumeStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'jrDev_Resume',
+    format: async (req, file) => 'pdf',
+    public_id: (req, file) => file.filename,
+  },
+});
 
-module.exports = uploadFile;
+const uploadFile = multer({ storage: storage, limits: { fileSize: 1000000 } });
+const uploadResume = multer({
+  storage: ResumeStorage,
+  limits: { fileSize: 3000000 },
+});
+module.exports = { uploadFile, uploadResume };

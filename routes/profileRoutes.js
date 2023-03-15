@@ -1,5 +1,6 @@
 const express = require('express');
 const ProfileRouter = express.Router();
+const { uploadResume } = require('../middleware/uploadFile');
 const { requireAuth } = require('../middleware/requierAuth');
 
 const {
@@ -8,6 +9,11 @@ const {
 } = require('../controllers/profileController');
 
 ProfileRouter.get('/profile', getAllProfiles);
-ProfileRouter.post('/profile', requireAuth, createProfile);
+ProfileRouter.post(
+  '/profile',
+  requireAuth,
+  uploadResume.single('resume'),
+  createProfile
+);
 
 module.exports = ProfileRouter;
