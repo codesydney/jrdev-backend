@@ -19,6 +19,20 @@ const getAllProfiles = async (req, res) => {
   }
 };
 
+// Get profile by user's Id
+const getProfilesById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const profile = await Profile.findById(userId);
+    res.status(200).json({
+      status: 'success',
+      profile,
+    });
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+  }
+};
+
 // Create candidate's profile
 const createProfile = async (req, res) => {
   const user = req.user;
@@ -62,4 +76,4 @@ const createProfile = async (req, res) => {
   }
 };
 
-module.exports = { getAllProfiles, createProfile };
+module.exports = { getAllProfiles, getProfilesById, createProfile };

@@ -4,11 +4,13 @@ const { uploadResume } = require('../middleware/uploadFile');
 const { requireAuth } = require('../middleware/requierAuth');
 
 const {
-  createProfile,
   getAllProfiles,
+  getProfilesById,
+  createProfile,
 } = require('../controllers/profileController');
 
-ProfileRouter.get('/profile', getAllProfiles);
+ProfileRouter.get('/profile', requireAuth, getAllProfiles);
+ProfileRouter.get('/profile/:id', requireAuth, getProfilesById);
 
 ProfileRouter.post(
   '/profile',
