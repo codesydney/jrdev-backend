@@ -8,12 +8,6 @@ const createToken = _id => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' });
 };
 
-const getUsers = async (req, res) => {
-  const Users = await User.find();
-
-  res.status(200).json(Users);
-};
-
 // login a user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -59,4 +53,4 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, getUsers };
+module.exports = { signupUser, loginUser };
