@@ -1,5 +1,4 @@
 const User = require('../models/userModel');
-const uploadFile = require('../middleware/uploadFile');
 const cloudinary = require('../utils/cloundinary');
 const jwt = require('jsonwebtoken');
 
@@ -9,7 +8,16 @@ const createToken = _id => {
 };
 
 const getUsers = async (req, res) => {
-  const Users = await User.find();
+  const Users = await User.find({}).populate('profile', {
+    about: 1,
+    skills: 1,
+    education: 1,
+    codeSyneyBadge: 1,
+    resume: 1,
+    portfolioLink: 1,
+    githubLink: 1,
+    linkedinLink: 1,
+  });
 
   res.status(200).json(Users);
 };
@@ -27,7 +35,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({ status: 'succses', email, token, id, user });
   } catch (error) {
-    res.status(400).json({ status: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 

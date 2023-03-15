@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      required: false,
+    },
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
     },
   },
   {
@@ -106,4 +111,4 @@ userSchema.statics.login = async function (email, password) {
   return user;
 };
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('User', userSchema);
