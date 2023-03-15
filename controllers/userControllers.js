@@ -7,6 +7,21 @@ const createToken = _id => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' });
 };
 
+const getUsers = async (req, res) => {
+  const Users = await User.find({}).populate('profile', {
+    about: 1,
+    skills: 1,
+    education: 1,
+    codeSyneyBadge: 1,
+    resume: 1,
+    portfolioLink: 1,
+    githubLink: 1,
+    linkedinLink: 1,
+  });
+
+  res.status(200).json(Users);
+};
+
 // login a user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -52,4 +67,4 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser };
+module.exports = { signupUser, loginUser, getUsers };
