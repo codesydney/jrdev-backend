@@ -35,9 +35,14 @@ const profileSchemas = new mongoose.Schema({
     required: true,
   },
   resume: {
-    type: String,
-    default: '',
-    required: false,
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   portfolioLink: {
     type: String,

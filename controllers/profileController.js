@@ -1,5 +1,6 @@
 const Profile = require('../models/profileModel');
 const cloudinary = require('../utils/cloundinary');
+const { uploadResume } = require('../middleware/uploadFile');
 
 // Get All candidate's profile
 const getAllProfiles = async (req, res) => {
@@ -46,12 +47,15 @@ const createProfile = async (req, res) => {
       githubLink,
       linkedinLink,
     } = req.body;
-    let resumeUrl = '';
+
+    let result = null;
     try {
       if (req.file) {
         //upload resume in PDF format to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path);
-        resumeUrl = result.secure_url;
+        result = await cloudinary.uploader.upload(req.file.path);
+
+        // resumePublic_id =
+        // resumeUrl = result.secure_url;
       }
       const newPortfolio = await Profile.create({
         user: user._id,
@@ -59,7 +63,7 @@ const createProfile = async (req, res) => {
         skills,
         education,
         codeSyneyBadge,
-        resume: resumeUrl,
+        resume: { public_id: result.public_id, url: result.secure_url },
         portfolioLink,
         githubLink,
         linkedinLink,
@@ -79,6 +83,10 @@ const createProfile = async (req, res) => {
 //Update candidate's profile By Id
 const updateProfile = async (req, res) => {
   const user = req.user;
+
+  // Get public_id & resumeUrl from multer
+  const { filename, path } = req.file;
+  console.log(req.file);
   if (user.profile) {
     try {
       const {
@@ -103,15 +111,41 @@ const updateProfile = async (req, res) => {
 
       // If there is a new resume file, upload it to Cloudinary and add the resumeUrl to the update fields
       if (req.file) {
-        const result = await cloudinary.uploader.upload(req.file.path);
-        const resumeUrl = result.secure_url;
-        updateFields.resume = resumeUrl;
+        // Delete older resume from cloundinary before updating new one
+        const olderResume = await Profile.findById(user.profile);
+        if (olderResume && olderResume.resume) {
+          const resumeId = olderResume.resume.public_id;
+          if (resumeId) {
+            await cloudinary.uploader.destroy(
+              resumeId,
+              function (error, result) {
+                console.log(result, error);
+              }
+            );
+          }
+        }
       }
+
+      // const result = await cloudinary.uploader.upload(req.file.path, {
+      //   folder: 'jrDev_Resume',
+      // });
+
+      // updateFields.resume = {
+      //   public_id: result.public_id,
+      //   url: result.secure_url,
+      // };
+
+      updateFields.resume = {
+        public_id: filename,
+        url: path,
+      };
+
       const updatedProfile = await Profile.findByIdAndUpdate(
         user.profile,
         updateFields,
         { new: true }
       );
+
       if (!updatedProfile) {
         return res.status(404).json({ error: 'Profile not found' });
       }

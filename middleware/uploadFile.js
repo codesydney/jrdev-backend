@@ -1,4 +1,5 @@
 const multer = require('multer');
+const uuidv4 = require('uuid').v4;
 const path = require('path');
 const cloudinary = require('../utils/cloundinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -9,7 +10,13 @@ const AvatarStorage = new CloudinaryStorage({
   params: {
     folder: 'jrDev_Avatar',
     format: async (req, file) => 'png',
-    public_id: (req, file) => file.filename,
+    public_id: (req, file) => {
+      // get the filename without extension
+      const filename = file.originalname.split('.')[0];
+      // generate a new uuid
+      const uuid = uuidv4();
+      return `${filename}_${uuid}`;
+    },
   },
 });
 
@@ -19,7 +26,14 @@ const ResumeStorage = new CloudinaryStorage({
   params: {
     folder: 'jrDev_Resume',
     format: async (req, file) => 'pdf',
-    public_id: (req, file) => file.filename,
+    public_id: (req, file) => {
+      // get the filename without extension
+      const filename = file.originalname.split('.')[0];
+      // generate a new uuid
+      const uuid = uuidv4();
+      // combine filename and uuid},
+      return `${filename}_${uuid}`;
+    },
   },
 });
 
