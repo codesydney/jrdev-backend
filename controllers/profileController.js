@@ -37,8 +37,8 @@ const getProfilesById = async (req, res) => {
 // Create candidate's profile
 const createProfile = async (req, res) => {
   const user = req.user;
-  const { filename, path } = req.file;
-  if (!user.profile) {
+
+  if (user && !user.profile) {
     const {
       about,
       skills,
@@ -48,7 +48,7 @@ const createProfile = async (req, res) => {
       githubLink,
       linkedinLink,
     } = req.body;
-
+    const { filename, path, originalname } = req.file;
     try {
       const newPortfolio = await Profile.create({
         user: user._id,
@@ -56,7 +56,7 @@ const createProfile = async (req, res) => {
         skills,
         education,
         codeSyneyBadge,
-        resume: { public_id: filename, url: path },
+        resume: { public_id: filename, url: path, originalname },
         portfolioLink,
         githubLink,
         linkedinLink,
@@ -78,10 +78,10 @@ const createProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const user = req.user;
 
-  // Get public_id & resumeUrl from multer
-  const { filename, path } = req.file;
+  // Get the file information (public ID, URL, original name) from multer
+  const { filename, path, originalname } = req.file;
   console.log(req.file);
-  if (user.profile) {
+  if (user && user.profile) {
     try {
       const {
         about,
@@ -105,7 +105,7 @@ const updateProfile = async (req, res) => {
 
       // If there is a new resume file, upload it to Cloudinary and add the resumeUrl to the update fields
       if (req.file) {
-        // Delete older resume from cloundinary before updating new one
+        // Delete older resume from cloundinary while updating new one
         const olderResume = await Profile.findById(user.profile);
         if (olderResume && olderResume.resume) {
           const resumeId = olderResume.resume.public_id;
@@ -120,20 +120,14 @@ const updateProfile = async (req, res) => {
         }
       }
 
-      // const result = await cloudinary.uploader.upload(req.file.path, {
-      //   folder: 'jrDev_Resume',
-      // });
-
-      // updateFields.resume = {
-      //   public_id: result.public_id,
-      //   url: result.secure_url,
-      // };
-
+      // Add the new resume file information to the update fields
       updateFields.resume = {
         public_id: filename,
         url: path,
+        originalname,
       };
 
+      // Update the candidate's profile with the new fields
       const updatedProfile = await Profile.findByIdAndUpdate(
         user.profile,
         updateFields,

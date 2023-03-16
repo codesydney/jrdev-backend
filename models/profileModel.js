@@ -43,6 +43,10 @@ const profileSchemas = new mongoose.Schema({
       type: String,
       required: true,
     },
+    originalname: {
+      type: String,
+      required: true,
+    },
   },
   portfolioLink: {
     type: String,
