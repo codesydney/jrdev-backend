@@ -37,6 +37,7 @@ const getProfilesById = async (req, res) => {
 // Create candidate's profile
 const createProfile = async (req, res) => {
   const user = req.user;
+  const { filename, path } = req.file;
   if (!user.profile) {
     const {
       about,
@@ -48,26 +49,19 @@ const createProfile = async (req, res) => {
       linkedinLink,
     } = req.body;
 
-    let result = null;
     try {
-      if (req.file) {
-        //upload resume in PDF format to Cloudinary
-        result = await cloudinary.uploader.upload(req.file.path);
-
-        // resumePublic_id =
-        // resumeUrl = result.secure_url;
-      }
       const newPortfolio = await Profile.create({
         user: user._id,
         about,
         skills,
         education,
         codeSyneyBadge,
-        resume: { public_id: result.public_id, url: result.secure_url },
+        resume: { public_id: filename, url: path },
         portfolioLink,
         githubLink,
         linkedinLink,
       });
+
       // Save profile to the specific user
       user.profile = newPortfolio._id;
       await user.save();
