@@ -1,5 +1,6 @@
 const Profile = require('../models/profileModel');
 const cloudinary = require('../utils/cloundinary');
+const { uploadResume } = require('../middleware/uploadFile');
 
 // Get All candidate's profile
 const getAllProfiles = async (req, res) => {
@@ -19,37 +20,50 @@ const getAllProfiles = async (req, res) => {
   }
 };
 
+// Get profile by user's Id
+const getProfilesById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const profile = await Profile.findById(userId);
+    res.status(200).json({
+      status: 'success',
+      profile,
+    });
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+  }
+};
+
 // Create candidate's profile
 const createProfile = async (req, res) => {
   const user = req.user;
-  if (!user.profile) {
+
+  if (user && !user.profile) {
     const {
       about,
       skills,
       education,
-      codeSyneyBadge,
+      yrsOfExpCoding,
+      codeSydneyBadge,
       portfolioLink,
       githubLink,
       linkedinLink,
     } = req.body;
-    let resumeUrl = '';
+    const { filename, path, originalname } = req.file;
     try {
-      if (req.file) {
-        //upload resume in PDF format to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path);
-        resumeUrl = result.secure_url;
-      }
       const newPortfolio = await Profile.create({
         user: user._id,
         about,
         skills,
         education,
-        codeSyneyBadge,
-        resume: resumeUrl,
+        yrsOfExpCoding,
+        codeSydneyBadge,
+        resume: { public_id: filename, url: path, originalname },
         portfolioLink,
         githubLink,
         linkedinLink,
       });
+
       // Save profile to the specific user
       user.profile = newPortfolio._id;
       await user.save();
@@ -62,4 +76,84 @@ const createProfile = async (req, res) => {
   }
 };
 
-module.exports = { getAllProfiles, createProfile };
+//Update candidate's profile By Id
+const updateProfile = async (req, res) => {
+  const user = req.user;
+
+  // Get the file information (public ID, URL, original name) from multer
+  const { filename, path, originalname } = req.file;
+  console.log(req.file);
+  if (user && user.profile) {
+    try {
+      const {
+        about,
+        skills,
+        education,
+        yrsOfExpCoding,
+        codeSydneyBadge,
+        portfolioLink,
+        githubLink,
+        linkedinLink,
+      } = req.body;
+
+      const updateFields = {
+        about,
+        skills,
+        education,
+        yrsOfExpCoding,
+        codeSydneyBadge,
+        portfolioLink,
+        githubLink,
+        linkedinLink,
+      };
+
+      // If there is a new resume file, upload it to Cloudinary and add the resumeUrl to the update fields
+      if (req.file) {
+        // Delete older resume from cloundinary while updating new one
+        const olderResume = await Profile.findById(user.profile);
+        if (olderResume && olderResume.resume) {
+          const resumeId = olderResume.resume.public_id;
+          if (resumeId) {
+            await cloudinary.uploader.destroy(
+              resumeId,
+              function (error, result) {
+                console.log(result, error);
+              }
+            );
+          }
+        }
+      }
+
+      // Add the new resume file information to the update fields
+      updateFields.resume = {
+        public_id: filename,
+        url: path,
+        originalname,
+      };
+
+      // Update the candidate's profile with the new fields
+      const updatedProfile = await Profile.findByIdAndUpdate(
+        user.profile,
+        updateFields,
+        { new: true }
+      );
+
+      if (!updatedProfile) {
+        return res.status(404).json({ error: 'Profile not found' });
+      }
+
+      res.status(200).json({ updatedProfile, status: 'success' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    return res.status(400).json({ error: 'Profile does not exist' });
+  }
+};
+
+module.exports = {
+  getAllProfiles,
+  getProfilesById,
+  createProfile,
+  updateProfile,
+};

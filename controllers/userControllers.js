@@ -12,7 +12,7 @@ const getUsers = async (req, res) => {
     about: 1,
     skills: 1,
     education: 1,
-    codeSyneyBadge: 1,
+    codeSydneyBadge: 1,
     resume: 1,
     portfolioLink: 1,
     githubLink: 1,
