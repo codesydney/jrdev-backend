@@ -16,6 +16,10 @@ const profileSchemas = new mongoose.Schema({
     default: [],
     required: true,
   },
+  yrsOfExpCoding: {
+    type: Number,
+    required: true,
+  },
   education: {
     type: [
       {
@@ -29,7 +33,7 @@ const profileSchemas = new mongoose.Schema({
     required: true,
     default: [],
   },
-  codeSyneyBadge: {
+  codeSydneyBadge: {
     type: [String],
     default: [],
     required: true,
