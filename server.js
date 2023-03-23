@@ -1,16 +1,15 @@
+const morgan = require('morgan');
+const cors = require('cors');
+const express = require('express');
+const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const ProfileRouter = require('./routes/profileRoutes');
 require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const morgan = require('morgan');
+
 const port = process.env.PORT || 3004;
 const app = express();
 
-morgan.token('req-data', req => {
-  return JSON.stringify(req.body);
-});
+morgan.token('req-data', req => JSON.stringify(req.body));
 
 app.use(
   morgan(

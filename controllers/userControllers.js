@@ -1,11 +1,10 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const cloudinary = require('../utils/cloundinary');
-const jwt = require('jsonwebtoken');
 
 // * create Token
-const createToken = _id => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' });
-};
+const createToken = _id =>
+  jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' });
 
 const getUsers = async (req, res) => {
   const Users = await User.find({}).populate('profile', {
@@ -16,7 +15,7 @@ const getUsers = async (req, res) => {
     resume: 1,
     portfolioLink: 1,
     githubLink: 1,
-    linkedinLink: 1,
+    linkedinLink: 1
   });
 
   res.status(200).json(Users);
@@ -45,7 +44,7 @@ const signupUser = async (req, res) => {
   let avatarUrl = '';
   try {
     if (req.file) {
-      //upload avatar to Cloudinary
+      // upload avatar to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
       avatarUrl = result.secure_url;
     }
