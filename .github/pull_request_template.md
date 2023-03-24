@@ -1,3 +1,5 @@
+<!-- @format -->
+
 ## Rationale
 
 What does this pull request do?
@@ -13,5 +15,6 @@ What does this pull request do?
 
 ## Issue Resolved
 
-*Note - This allows the issue to be automatically linked to the PR once the PR is submitted for review*
+_Note - This allows the issue to be automatically linked to the PR once the PR is submitted for review_
+
 - Fixes #<Issue Number>

@@ -1,13 +1,14 @@
 const express = require('express');
-const ProfileRouter = express.Router();
 const { uploadResume } = require('../middleware/uploadFile');
 const { requireAuth } = require('../middleware/requierAuth');
+
+const ProfileRouter = express.Router();
 
 const {
   getAllProfiles,
   getProfilesById,
   createProfile,
-  updateProfile,
+  updateProfile
 } = require('../controllers/profileController');
 
 ProfileRouter.get('/profile', requireAuth, getAllProfiles);

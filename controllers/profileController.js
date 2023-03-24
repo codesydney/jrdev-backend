@@ -1,6 +1,5 @@
 const Profile = require('../models/profileModel');
 const cloudinary = require('../utils/cloundinary');
-const { uploadResume } = require('../middleware/uploadFile');
 
 // Get All candidate's profile
 const getAllProfiles = async (req, res) => {
@@ -9,11 +8,11 @@ const getAllProfiles = async (req, res) => {
       firstName: 1,
       lastName: 1,
       avatar: 1,
-      city: 1,
+      city: 1
     });
     res.status(200).json({
       status: 'success',
-      profiles,
+      profiles
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -27,7 +26,7 @@ const getProfilesById = async (req, res) => {
     const profile = await Profile.findById(userId);
     res.status(200).json({
       status: 'success',
-      profile,
+      profile
     });
   } catch (err) {
     res.status(400).json({ err: err.message });
@@ -36,7 +35,7 @@ const getProfilesById = async (req, res) => {
 
 // Create candidate's profile
 const createProfile = async (req, res) => {
-  const user = req.user;
+  const { user } = req;
 
   if (user && !user.profile) {
     const {
@@ -47,7 +46,7 @@ const createProfile = async (req, res) => {
       codeSydneyBadge,
       portfolioLink,
       githubLink,
-      linkedinLink,
+      linkedinLink
     } = req.body;
     const { filename, path, originalname } = req.file;
     try {
@@ -61,28 +60,29 @@ const createProfile = async (req, res) => {
         resume: { public_id: filename, url: path, originalname },
         portfolioLink,
         githubLink,
-        linkedinLink,
+        linkedinLink
       });
 
       // Save profile to the specific user
       user.profile = newPortfolio._id;
       await user.save();
-      res.status(201).json({ newPortfolio, status: 'success' });
+      return res.status(201).json({ newPortfolio, status: 'success' });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      return res.status(400).json({ error: err.message });
     }
   } else {
     return res.status(400).json({ error: 'Profile already exists' });
   }
 };
 
-//Update candidate's profile By Id
+// Update candidate's profile By Id
 const updateProfile = async (req, res) => {
-  const user = req.user;
-
+  console.log('here1', req.file);
+  const { user } = req;
+  console.log('here2', user);
   // Get the file information (public ID, URL, original name) from multer
   const { filename, path, originalname } = req.file;
-  console.log(req.file);
+  console.log('here3', req.file);
   if (user && user.profile) {
     try {
       const {
@@ -93,7 +93,7 @@ const updateProfile = async (req, res) => {
         codeSydneyBadge,
         portfolioLink,
         githubLink,
-        linkedinLink,
+        linkedinLink
       } = req.body;
 
       const updateFields = {
@@ -104,22 +104,19 @@ const updateProfile = async (req, res) => {
         codeSydneyBadge,
         portfolioLink,
         githubLink,
-        linkedinLink,
+        linkedinLink
       };
 
-      // If there is a new resume file, upload it to Cloudinary and add the resumeUrl to the update fields
+      // If there is a new resume file, upload it to Cloudinary and return resumeURL
       if (req.file) {
         // Delete older resume from cloundinary while updating new one
         const olderResume = await Profile.findById(user.profile);
         if (olderResume && olderResume.resume) {
           const resumeId = olderResume.resume.public_id;
           if (resumeId) {
-            await cloudinary.uploader.destroy(
-              resumeId,
-              function (error, result) {
-                console.log(result, error);
-              }
-            );
+            await cloudinary.uploader.destroy(resumeId, (error, result) => {
+              console.log(result, error);
+            });
           }
         }
       }
@@ -128,7 +125,7 @@ const updateProfile = async (req, res) => {
       updateFields.resume = {
         public_id: filename,
         url: path,
-        originalname,
+        originalname
       };
 
       // Update the candidate's profile with the new fields
@@ -141,10 +138,9 @@ const updateProfile = async (req, res) => {
       if (!updatedProfile) {
         return res.status(404).json({ error: 'Profile not found' });
       }
-
-      res.status(200).json({ updatedProfile, status: 'success' });
+      return res.status(200).json({ updatedProfile, status: 'success' });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: err.message });
     }
   } else {
     return res.status(400).json({ error: 'Profile does not exist' });
@@ -155,5 +151,5 @@ module.exports = {
   getAllProfiles,
   getProfilesById,
   createProfile,
-  updateProfile,
+  updateProfile
 };

@@ -3,8 +3,9 @@ const { uploadAvatar } = require('../middleware/uploadFile');
 const {
   loginUser,
   signupUser,
-  getUsers,
+  getUsers
 } = require('../controllers/userControllers');
+
 const router = express.Router();
 
 //* signup Route

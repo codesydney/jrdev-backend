@@ -9,45 +9,43 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
+      lowercase: true
     },
     password: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     firstName: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     lastName: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     city: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     phone: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     avatar: {
       type: String,
-      required: false,
+      required: false
     },
     profile: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile',
-    },
+      ref: 'Profile'
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 userSchema.statics.signup = async function (
@@ -87,7 +85,7 @@ userSchema.statics.signup = async function (
     lastName,
     city,
     phone,
-    avatar,
+    avatar
   });
 
   return user;
