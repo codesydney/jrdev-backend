@@ -66,4 +66,10 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, getUsers };
+// verify token and login status
+const verifyToken = async (req, res) => {
+  const { user } = req;
+  res.send(`Hello, ${user.username}! You have accessed a protected route.`);
+};
+
+module.exports = { signupUser, loginUser, getUsers, verifyToken };
