@@ -77,12 +77,9 @@ const createProfile = async (req, res) => {
 
 // Update candidate's profile By Id
 const updateProfile = async (req, res) => {
-  console.log('here1', req.file);
   const { user } = req;
-  console.log('here2', user);
   // Get the file information (public ID, URL, original name) from multer
   const { filename, path, originalname } = req.file;
-  console.log('here3', req.file);
   if (user && user.profile) {
     try {
       const {
